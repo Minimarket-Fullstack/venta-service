@@ -46,23 +46,23 @@ class VentaServiceMockitoTest {
 
         assertEquals(1, resultado.size());
         assertEquals("VNT-1", resultado.get(0).getNumeroVenta());
-        verify(ventaRepository).findAll();
+
+        void findById_deberiaRetornarVenta() {
+            Venta venta = new Venta(1L, 1L, LocalDate.now(), BigDecimal.valueOf(15990), "PENDIENTE", "VNT-1", BigDecimal.ZERO, "Daniel", null);
+            when(ventaRepository.findById(1L)).thenReturn(Optional.of(venta));
+
+            VentaResponseDTO resultado = ventaService.findById(1L);
+
+            assertEquals(1L, resultado.getId());
+            assertEquals("PENDIENTE", resultado.getEstado());
+            verify(ventaRepository).findById(1L);
+        }
+
+        @Test
+        void cambiarEstado_deberiaActualizarEstado() {        verify(ventaRepository).findAll();
     }
 
     @Test
-    void findById_deberiaRetornarVenta() {
-        Venta venta = new Venta(1L, 1L, LocalDate.now(), BigDecimal.valueOf(15990), "PENDIENTE", "VNT-1", BigDecimal.ZERO, "Daniel", null);
-        when(ventaRepository.findById(1L)).thenReturn(Optional.of(venta));
-
-        VentaResponseDTO resultado = ventaService.findById(1L);
-
-        assertEquals(1L, resultado.getId());
-        assertEquals("PENDIENTE", resultado.getEstado());
-        verify(ventaRepository).findById(1L);
-    }
-
-    @Test
-    void cambiarEstado_deberiaActualizarEstado() {
         Venta venta = new Venta(1L, 1L, LocalDate.now(), BigDecimal.valueOf(15990), "PENDIENTE", "VNT-1", BigDecimal.ZERO, "Daniel", null);
         when(ventaRepository.findById(1L)).thenReturn(Optional.of(venta));
         when(ventaRepository.save(any(Venta.class))).thenAnswer(inv -> inv.getArgument(0));
